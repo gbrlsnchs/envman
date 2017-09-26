@@ -24,12 +24,12 @@ func Example() {
 		// handle error
 	}
 
-	myVar := envman.Get("MY_ENV_VAR")
-	foobar := envman.Get("MY_FOO_BAR_VAR")
+	myVar := envman.Int("MY_ENV_VAR")
+	foobar := envman.Int("MY_FOO_BAR_VAR")
 
 	fmt.Println(myVar)
 	fmt.Println(foobar)
 
 	// Output: 1337
-	// <nil>
+	// 0
 }
