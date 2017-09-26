@@ -9,24 +9,24 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGet(t *testing.T) {
+func TestFloat(t *testing.T) {
 	a := assert.New(t)
 	tests := []*struct {
 		shouldBeSet bool
 		varname     string
-		expectedVal interface{}
+		expectedVal float64
 	}{
 		// #0
 		{
 			shouldBeSet: true,
 			varname:     "TEST",
-			expectedVal: "test",
+			expectedVal: 1.0,
 		},
 		// #1
 		{
 			shouldBeSet: false,
 			varname:     "TEST",
-			expectedVal: nil,
+			expectedVal: 0.0,
 		},
 	}
 
@@ -34,10 +34,43 @@ func TestGet(t *testing.T) {
 		index := strconv.Itoa(i)
 
 		if test.shouldBeSet {
-			envbox[test.varname] = test.expectedVal
+			floatBox[test.varname] = test.expectedVal
 		}
 
-		a.Exactly(test.expectedVal, Get(test.varname), index)
+		a.Exactly(test.expectedVal, Float(test.varname), index)
+		Clear()
+	}
+}
+
+func TestInt(t *testing.T) {
+	a := assert.New(t)
+	tests := []*struct {
+		shouldBeSet bool
+		varname     string
+		expectedVal int
+	}{
+		// #0
+		{
+			shouldBeSet: true,
+			varname:     "TEST",
+			expectedVal: -1,
+		},
+		// #1
+		{
+			shouldBeSet: false,
+			varname:     "TEST",
+			expectedVal: 0,
+		},
+	}
+
+	for i, test := range tests {
+		index := strconv.Itoa(i)
+
+		if test.shouldBeSet {
+			intBox[test.varname] = test.expectedVal
+		}
+
+		a.Exactly(test.expectedVal, Int(test.varname), index)
 		Clear()
 	}
 }
@@ -87,7 +120,7 @@ func TestSetFloat(t *testing.T) {
 		a.Exactly(test.expected, err == nil, index)
 
 		if err == nil {
-			a.IsType(0.0, Get(test.key), index)
+			a.IsType(0.0, Float(test.key), index)
 		}
 
 		Clear()
@@ -139,7 +172,7 @@ func TestSetInt(t *testing.T) {
 		a.Exactly(test.expected, err == nil, index)
 
 		if err == nil {
-			a.IsType(-1, Get(test.key), index)
+			a.IsType(-1, Int(test.key), index)
 		}
 
 		Clear()
@@ -186,7 +219,7 @@ func TestSetString(t *testing.T) {
 
 		a.Nil(err)
 		SetString(test.key)
-		a.IsType("0", Get(test.key), index)
+		a.IsType("0", String(test.key), index)
 
 		Clear()
 	}
@@ -237,7 +270,7 @@ func TestSetTime(t *testing.T) {
 		a.Exactly(test.expected, err == nil, index)
 
 		if err == nil {
-			a.IsType(time.Duration(0), Get(test.key), index)
+			a.IsType(time.Duration(0), Time(test.key), index)
 		}
 
 		Clear()
@@ -289,9 +322,75 @@ func TestSetUint(t *testing.T) {
 		a.Exactly(test.expected, err == nil, index)
 
 		if err == nil {
-			a.IsType(uint64(1), Get(test.key), index)
+			a.IsType(uint(1), Uint(test.key), index)
 		}
 
+		Clear()
+	}
+}
+
+func TestString(t *testing.T) {
+	a := assert.New(t)
+	tests := []*struct {
+		shouldBeSet bool
+		varname     string
+		expectedVal string
+	}{
+		// #0
+		{
+			shouldBeSet: true,
+			varname:     "TEST",
+			expectedVal: "test",
+		},
+		// #1
+		{
+			shouldBeSet: false,
+			varname:     "TEST",
+			expectedVal: "",
+		},
+	}
+
+	for i, test := range tests {
+		index := strconv.Itoa(i)
+
+		if test.shouldBeSet {
+			stringBox[test.varname] = test.expectedVal
+		}
+
+		a.Exactly(test.expectedVal, String(test.varname), index)
+		Clear()
+	}
+}
+
+func TestUint(t *testing.T) {
+	a := assert.New(t)
+	tests := []*struct {
+		shouldBeSet bool
+		varname     string
+		expectedVal uint
+	}{
+		// #0
+		{
+			shouldBeSet: true,
+			varname:     "TEST",
+			expectedVal: 1,
+		},
+		// #1
+		{
+			shouldBeSet: false,
+			varname:     "TEST",
+			expectedVal: 0,
+		},
+	}
+
+	for i, test := range tests {
+		index := strconv.Itoa(i)
+
+		if test.shouldBeSet {
+			uintBox[test.varname] = test.expectedVal
+		}
+
+		a.Exactly(test.expectedVal, Uint(test.varname), index)
 		Clear()
 	}
 }

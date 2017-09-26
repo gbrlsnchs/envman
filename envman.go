@@ -6,21 +6,40 @@ import (
 	"time"
 )
 
-// envbox stores all the environment variables stored by the setters.
-var envbox map[string]interface{}
+var (
+	// floatBox stores all variables of type float.
+	floatBox map[string]float64
+	// intBox stores all variables of type int.
+	intBox map[string]int
+	// stringBox stores all variables of type string.
+	stringBox map[string]string
+	// timeBox stores all variables of type time.Duration.
+	timeBox map[string]time.Duration
+	// uintBox stores all variables of type uint.
+	uintBox map[string]uint
+)
 
 func init() {
 	Clear()
 }
 
-// Get returns an already stored value or nil.
-func Get(key string) interface{} {
-	return envbox[key]
-}
-
 // Clear resets the map holding all environment variables that were set.
 func Clear() {
-	envbox = make(map[string]interface{})
+	floatBox = make(map[string]float64)
+	intBox = make(map[string]int)
+	stringBox = make(map[string]string)
+	timeBox = make(map[string]time.Duration)
+	uintBox = make(map[string]uint)
+}
+
+// Float returns a variable of type float.
+func Float(key string) float64 {
+	return floatBox[key]
+}
+
+// Int returns a variable of type int.
+func Int(key string) int {
+	return intBox[key]
 }
 
 // SetFloat stores one or more environment variables
@@ -35,7 +54,7 @@ func SetFloat(keys ...string) error {
 			return err
 		}
 
-		envbox[k] = val
+		floatBox[k] = val
 	}
 
 	return nil
@@ -53,7 +72,7 @@ func SetInt(keys ...string) error {
 			return err
 		}
 
-		envbox[k] = val
+		intBox[k] = val
 	}
 
 	return nil
@@ -66,7 +85,7 @@ func SetInt(keys ...string) error {
 func SetString(keys ...string) {
 	for _, k := range keys {
 		val := os.Getenv(k)
-		envbox[k] = val
+		stringBox[k] = val
 	}
 }
 
@@ -82,7 +101,7 @@ func SetTime(keys ...string) error {
 			return err
 		}
 
-		envbox[k] = time.Duration(val)
+		timeBox[k] = time.Duration(val)
 	}
 
 	return nil
@@ -100,8 +119,23 @@ func SetUint(keys ...string) error {
 			return err
 		}
 
-		envbox[k] = val
+		uintBox[k] = uint(val)
 	}
 
 	return nil
+}
+
+// String returns a variable of type string.
+func String(key string) string {
+	return stringBox[key]
+}
+
+// Time returns a variable of type time.Duration.
+func Time(key string) time.Duration {
+	return timeBox[key]
+}
+
+// Uint returns a variable of type uint.
+func Uint(key string) uint {
+	return uintBox[key]
 }
